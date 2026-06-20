@@ -1,0 +1,9 @@
+<!-- views/partials/flash.ejs -->
+<!-- Shows success/error notifications -->
+
+<% if (flash) { %>
+  <div class="flash flash-<%= flash.type %>">
+    <span><%= flash.message %></span>
+    <button onclick="this.parentElement.remove()">✕</button>
+  </div>
+<% } %>

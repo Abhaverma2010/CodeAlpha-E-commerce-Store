@@ -1,0 +1,76 @@
+<!-- views/admin/product-form.ejs -->
+<!-- Used for BOTH adding and editing a product -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | ShopEase Admin</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <%- include('../partials/flash') %>
+
+  <div class="container mt-4">
+    <a href="/admin/products" class="back-link">← Back to Products</a>
+    <h1 class="page-title"><%= title %></h1>
+
+    <!-- If editing: use PUT method via method-override -->
+    <form
+      action="<%= product ? `/admin/products/${product._id}?_method=PUT` : '/admin/products' %>"
+      method="POST"
+      enctype="multipart/form-data"
+      class="product-form"
+    >
+      <div class="form-group">
+        <label for="name">Product Name *</label>
+        <input type="text" id="name" name="name" value="<%= product ? product.name : '' %>" placeholder="iPhone 15 Pro" required />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea id="description" name="description" rows="4" placeholder="Describe the product..." required><%= product ? product.description : '' %></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="price">Price (₹) *</label>
+          <input type="number" id="price" name="price" value="<%= product ? product.price : '' %>" placeholder="999" min="0" step="0.01" required />
+        </div>
+        <div class="form-group">
+          <label for="stock">Stock Quantity *</label>
+          <input type="number" id="stock" name="stock" value="<%= product ? product.stock : '' %>" placeholder="50" min="0" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category *</label>
+        <select id="category" name="category" required>
+          <option value="">-- Select Category --</option>
+          <% categories.forEach(cat => { %>
+            <option value="<%= cat %>" <%= product && product.category === cat ? 'selected' : '' %>><%= cat %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="image">Product Image (optional)</label>
+        <% if (product && product.image) { %>
+          <img src="<%= product.image %>" alt="Current image" class="current-image-preview" />
+          <p class="form-hint">Upload a new image to replace the current one</p>
+        <% } %>
+        <input type="file" id="image" name="image" accept="image/*" />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-lg"><%= product ? 'Update Product' : 'Add Product' %></button>
+        <a href="/admin/products" class="btn btn-outline btn-lg">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+  <footer class="footer"><p>© 2024 ShopEase Admin</p></footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>

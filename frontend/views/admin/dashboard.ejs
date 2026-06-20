@@ -1,0 +1,44 @@
+<!-- views/admin/dashboard.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | ShopEase</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <%- include('../partials/flash') %>
+
+  <div class="container mt-4">
+    <h1 class="page-title">⚙️ Admin Dashboard</h1>
+
+    <div class="admin-grid">
+      <a href="/admin/products/new" class="admin-card">
+        <span class="admin-icon">➕</span>
+        <h3>Add Product</h3>
+        <p>Add a new product to the store</p>
+      </a>
+      <a href="/admin/products" class="admin-card">
+        <span class="admin-icon">📦</span>
+        <h3>Manage Products</h3>
+        <p>Edit or delete existing products</p>
+      </a>
+      <a href="/admin/orders" class="admin-card">
+        <span class="admin-icon">📋</span>
+        <h3>Manage Orders</h3>
+        <p>View and update order statuses</p>
+      </a>
+      <a href="/products" class="admin-card">
+        <span class="admin-icon">🛒</span>
+        <h3>View Store</h3>
+        <p>See the store as customers see it</p>
+      </a>
+    </div>
+  </div>
+
+  <footer class="footer"><p>© 2024 ShopEase Admin</p></footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>

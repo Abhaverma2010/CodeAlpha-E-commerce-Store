@@ -1,0 +1,70 @@
+<!-- views/admin/orders.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Orders | ShopEase Admin</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <%- include('../partials/flash') %>
+
+  <div class="container mt-4">
+    <h1 class="page-title">📋 All Orders</h1>
+
+    <% if (orders.length === 0) { %>
+      <div class="empty-state"><p>No orders yet.</p></div>
+    <% } else { %>
+      <div class="admin-table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Update</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(order => { %>
+              <tr>
+                <td><code>#<%= order._id.toString().slice(-6).toUpperCase() %></code></td>
+                <td>
+                  <% if (order.user) { %>
+                    <%= order.user.name %><br/>
+                    <small><%= order.user.email %></small>
+                  <% } %>
+                </td>
+                <td><%= order.items.length %> item(s)</td>
+                <td>₹<%= order.totalAmount.toLocaleString('en-IN') %></td>
+                <td><%= order.paymentMethod %></td>
+                <td><%= new Date(order.createdAt).toLocaleDateString('en-IN') %></td>
+                <td><span class="order-status status-<%= order.status.toLowerCase() %>"><%= order.status %></span></td>
+                <td>
+                  <form action="/admin/orders/<%= order._id %>/status" method="POST" class="inline-form">
+                    <select name="status" class="select-sm">
+                      <% ["Pending","Processing","Shipped","Delivered","Cancelled"].forEach(s => { %>
+                        <option value="<%= s %>" <%= order.status === s ? 'selected' : '' %>><%= s %></option>
+                      <% }) %>
+                    </select>
+                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <footer class="footer"><p>© 2024 ShopEase Admin</p></footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>

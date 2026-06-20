@@ -1,0 +1,54 @@
+<!-- views/orders/my-orders.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Orders | ShopEase</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <%- include('../partials/flash') %>
+
+  <div class="container mt-4">
+    <h1 class="page-title">My Orders</h1>
+
+    <% if (orders.length === 0) { %>
+      <div class="empty-state">
+        <p>You haven't placed any orders yet.</p>
+        <a href="/products" class="btn btn-primary mt-2">Start Shopping</a>
+      </div>
+    <% } else { %>
+      <% orders.forEach(order => { %>
+        <div class="order-card">
+          <div class="order-header">
+            <div>
+              <span class="order-id">Order #<%= order._id.toString().slice(-6).toUpperCase() %></span>
+              <span class="order-date"><%= new Date(order.createdAt).toLocaleDateString('en-IN') %></span>
+            </div>
+            <span class="order-status status-<%= order.status.toLowerCase() %>"><%= order.status %></span>
+          </div>
+
+          <div class="order-items">
+            <% order.items.forEach(item => { %>
+              <div class="order-item-row">
+                <span><%= item.name %> × <%= item.quantity %></span>
+                <span>₹<%= (item.price * item.quantity).toLocaleString('en-IN') %></span>
+              </div>
+            <% }) %>
+          </div>
+
+          <div class="order-footer">
+            <span>Payment: <%= order.paymentMethod %></span>
+            <span class="order-total">Total: ₹<%= order.totalAmount.toLocaleString('en-IN') %></span>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <footer class="footer"><p>© 2024 ShopEase</p></footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>

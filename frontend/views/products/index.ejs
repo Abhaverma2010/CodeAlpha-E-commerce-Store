@@ -1,0 +1,90 @@
+<!-- views/products/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | ShopEase</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <%- include('../partials/flash') %>
+
+  <div class="container mt-4">
+    <h1 class="page-title">Shop All Products</h1>
+
+    <!-- Search & Filter Bar -->
+    <form action="/products" method="GET" class="filter-bar">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search products..."
+        value="<%= search %>"
+        class="search-input"
+      />
+
+      <select name="category" class="select-input">
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat %>" <%= selectedCategory === cat ? 'selected' : '' %>><%= cat %></option>
+        <% }) %>
+      </select>
+
+      <select name="sort" class="select-input">
+        <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Newest First</option>
+        <option value="price-low" <%= sort === 'price-low' ? 'selected' : '' %>>Price: Low to High</option>
+        <option value="price-high" <%= sort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
+      </select>
+
+      <button type="submit" class="btn btn-primary">Filter</button>
+      <a href="/products" class="btn btn-outline">Clear</a>
+    </form>
+
+    <!-- Product Grid -->
+    <% if (products.length === 0) { %>
+      <div class="empty-state">
+        <p>No products found. Try a different search.</p>
+      </div>
+    <% } else { %>
+      <p class="result-count"><%= products.length %> products found</p>
+      <div class="product-grid">
+        <% products.forEach(product => { %>
+          <div class="product-card">
+            <a href="/products/<%= product._id %>">
+              <img src="<%= product.image %>" alt="<%= product.name %>" class="product-img" />
+            </a>
+            <div class="product-info">
+              <span class="product-category"><%= product.category %></span>
+              <h3 class="product-name">
+                <a href="/products/<%= product._id %>"><%= product.name %></a>
+              </h3>
+              <p class="product-price">₹<%= product.price.toLocaleString('en-IN') %></p>
+              <p class="stock-info">
+                <% if (product.stock > 0) { %>
+                  <span class="in-stock">✅ In Stock (<%= product.stock %> left)</span>
+                <% } else { %>
+                  <span class="out-of-stock">❌ Out of Stock</span>
+                <% } %>
+              </p>
+              <% if (product.stock > 0) { %>
+                <% if (currentUser) { %>
+                  <form action="/cart/add/<%= product._id %>" method="POST">
+                    <button type="submit" class="btn btn-primary btn-sm full-width">Add to Cart</button>
+                  </form>
+                <% } else { %>
+                  <a href="/auth/login" class="btn btn-outline btn-sm full-width">Login to Buy</a>
+                <% } %>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <footer class="footer">
+    <p>© 2024 ShopEase</p>
+  </footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>

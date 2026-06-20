@@ -1,0 +1,94 @@
+<!-- views/home.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <%- include('partials/navbar') %>
+  <%- include('partials/flash') %>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Find What You Love</h1>
+      <p>Shop thousands of products across all categories</p>
+      <a href="/products" class="btn btn-primary btn-lg">Browse Products →</a>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Latest Products</h2>
+
+      <% if (featuredProducts.length === 0) { %>
+        <div class="empty-state">
+          <p>No products yet. <% if (currentUser && currentUser.role === 'admin') { %>
+            <a href="/admin/products/new">Add the first product!</a>
+          <% } %></p>
+        </div>
+      <% } else { %>
+        <div class="product-grid">
+          <% featuredProducts.forEach(product => { %>
+            <div class="product-card">
+              <a href="/products/<%= product._id %>">
+                <img src="<%= product.image %>" alt="<%= product.name %>" class="product-img" />
+              </a>
+              <div class="product-info">
+                <span class="product-category"><%= product.category %></span>
+                <h3 class="product-name">
+                  <a href="/products/<%= product._id %>"><%= product.name %></a>
+                </h3>
+                <p class="product-price">₹<%= product.price.toLocaleString('en-IN') %></p>
+                <div class="product-actions">
+                  <% if (product.stock > 0) { %>
+                    <% if (currentUser) { %>
+                      <form action="/cart/add/<%= product._id %>" method="POST">
+                        <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
+                      </form>
+                    <% } else { %>
+                      <a href="/auth/login" class="btn btn-primary btn-sm">Login to Buy</a>
+                    <% } %>
+                  <% } else { %>
+                    <span class="out-of-stock">Out of Stock</span>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+        <div class="center mt-4">
+          <a href="/products" class="btn btn-outline">View All Products →</a>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="section bg-light">
+    <div class="container">
+      <h2 class="section-title">Shop by Category</h2>
+      <div class="category-grid">
+        <% ["Electronics", "Clothing", "Books", "Home", "Sports"].forEach(cat => { %>
+          <a href="/products?category=<%= cat %>" class="category-card">
+            <span class="category-icon">
+              <%= cat === 'Electronics' ? '📱' : cat === 'Clothing' ? '👕' : cat === 'Books' ? '📚' : cat === 'Home' ? '🏠' : '⚽' %>
+            </span>
+            <span><%= cat %></span>
+          </a>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2024 ShopEase. Built with Node.js + Express + MongoDB</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-brand">🛒 ShopEase</a>
+
+    <ul class="nav-links">
+      <li><a href="/products">Shop</a></li>
+
+      <% if (currentUser) { %>
+        <li><a href="/cart">🛒 Cart</a></li>
+        <li><a href="/orders">My Orders</a></li>
+
+        <% if (currentUser.role === 'admin') { %>
+          <li><a href="/admin" class="admin-link">⚙️ Admin</a></li>
+        <% } %>
+
+        <li class="user-info">Hi, <%= currentUser.name.split(' ')[0] %>!</li>
+        <li><a href="/auth/logout" class="btn btn-outline">Logout</a></li>
+      <% } else { %>
+        <li><a href="/auth/login" class="btn btn-outline">Login</a></li>
+        <li><a href="/auth/register" class="btn btn-primary">Register</a></li>
+      <% } %>
+    </ul>
+
+    <!-- Mobile hamburger -->
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+  </div>
+</nav>

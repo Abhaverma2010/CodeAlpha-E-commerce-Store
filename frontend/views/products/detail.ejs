@@ -1,0 +1,65 @@
+<!-- views/products/detail.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | ShopEase</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <%- include('../partials/flash') %>
+
+  <div class="container mt-4">
+    <a href="/products" class="back-link">← Back to Products</a>
+
+    <div class="product-detail">
+      <div class="product-detail-image">
+        <img src="<%= product.image %>" alt="<%= product.name %>" />
+      </div>
+
+      <div class="product-detail-info">
+        <span class="product-category-badge"><%= product.category %></span>
+        <h1 class="product-detail-name"><%= product.name %></h1>
+        <p class="product-detail-price">₹<%= product.price.toLocaleString('en-IN') %></p>
+
+        <div class="product-detail-desc">
+          <h3>Description</h3>
+          <p><%= product.description %></p>
+        </div>
+
+        <div class="stock-status">
+          <% if (product.stock > 0) { %>
+            <p class="in-stock">✅ In Stock — <%= product.stock %> units available</p>
+          <% } else { %>
+            <p class="out-of-stock">❌ Out of Stock</p>
+          <% } %>
+        </div>
+
+        <% if (product.stock > 0) { %>
+          <% if (currentUser) { %>
+            <form action="/cart/add/<%= product._id %>" method="POST">
+              <button type="submit" class="btn btn-primary btn-lg">🛒 Add to Cart</button>
+            </form>
+          <% } else { %>
+            <a href="/auth/login" class="btn btn-primary btn-lg">Login to Purchase</a>
+          <% } %>
+        <% } %>
+
+        <% if (currentUser && currentUser.role === 'admin') { %>
+          <div class="admin-product-actions mt-4">
+            <a href="/admin/products/<%= product._id %>/edit" class="btn btn-outline">✏️ Edit</a>
+            <form action="/admin/products/<%= product._id %>?_method=DELETE" method="POST" style="display:inline">
+              <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this product?')">🗑️ Delete</button>
+            </form>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer"><p>© 2024 ShopEase</p></footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>
